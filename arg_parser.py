@@ -14,10 +14,10 @@ DESCRIPTION = f"""
     length of the files.
     
     Examples:
-    total-video-duration "{str(Path.home())}/Videos" -fx mp4 mov -r 
+    total_video_duration.py "{str(Path.home())}/Videos" -fx mp4 mov -r 
     """
 
-arg_parser = argparse.ArgumentParser(prog="total-video-duration", description=DESCRIPTION)
+arg_parser = argparse.ArgumentParser(prog="total_video_duration", description=DESCRIPTION)
 arg_parser.add_argument("base_dir",
     type=convert_to_path,
     nargs='+',
