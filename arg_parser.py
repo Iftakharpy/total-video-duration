@@ -17,7 +17,7 @@ DESCRIPTION = f"""
     total-video-duration "{str(Path.home())}/Videos" -fx mp4 mov -r 
     """
 
-arg_parser = argparse.ArgumentParser(description=DESCRIPTION)
+arg_parser = argparse.ArgumentParser(prog="total-video-duration", description=DESCRIPTION)
 arg_parser.add_argument("base_dir",
     type=convert_to_path,
     nargs='+',
