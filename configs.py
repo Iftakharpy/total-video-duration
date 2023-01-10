@@ -1,3 +1,5 @@
+VERBOSE: bool = False
+
 RECURSIVE: bool = False
 
 FILE_EXTENSIONS: list[str] = [

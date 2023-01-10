@@ -1,14 +1,15 @@
 #!/usr/bin/python3
 import cv2
-import datetime
+from datetime import timedelta as dt
 from pathlib import Path
 from arg_parser import parsed_args
-from collections.abc import Iterable
+from typing import Iterable, Callable
 
 
 base_dir: Path = parsed_args.base_dir
 file_extensions: list[str] = parsed_args.file_extension
 is_recursive: bool = parsed_args.recursive
+is_verbose: bool = parsed_args.verbose
 
 
 def get_video_duration(file_path: str) -> float: # returns seconds
@@ -21,7 +22,8 @@ def get_video_duration(file_path: str) -> float: # returns seconds
 def get_total_duration(
         base_dirs: list[Path],
         file_extensions: list[str],
-        is_recursive: bool
+        is_recursive: bool,
+        video_duration_callback: Callable[[float, str], None]=None
     ):
 
     globs: list[Iterable[Path]] = []
@@ -33,18 +35,33 @@ def get_total_duration(
                 glob = base_dir.glob(f"*.{file_extension}")
             globs.append(glob)
     
+    total_videos = 0
     total_duration = 0 # seconds
     for glob in globs:
         for file in glob:
             absolute_file_path = str(file.absolute())
-            total_duration += get_video_duration(absolute_file_path)
+            video_duration = get_video_duration(absolute_file_path)
+            if is_verbose and video_duration_callback:
+                video_duration_callback(video_duration, absolute_file_path)
+            
+            total_videos += 1
+            total_duration += video_duration
     
-    total_duration = datetime.timedelta(seconds=round(total_duration))
-    print("Total duration is:", total_duration)
+    return total_duration, total_videos
 
 
 def main():
-    get_total_duration(base_dir, file_extensions, is_recursive)
+    total_duration, total_videos = get_total_duration(
+        base_dir,
+        file_extensions,
+        is_recursive,
+        video_duration_callback=lambda duration, video_file: print(f"{dt(seconds=round(duration))} - {video_file}")
+    )
+    total_duration = dt(seconds=round(total_duration))
+    print(f"###############################")
+    print(f"Videos: {total_videos}")
+    print(f"Total Duration: {total_duration}")
+    print(f"###############################")
 
 
 if __name__ == '__main__':

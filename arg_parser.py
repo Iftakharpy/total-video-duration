@@ -38,6 +38,13 @@ arg_parser.add_argument(
     action="store_true",
     help="Recursively look for video files",
 )
+arg_parser.add_argument(
+    "-v",
+    "--verbose",
+    default=configs.VERBOSE,
+    action="store_true",
+    help="Show file paths and durations as well",
+)
 
 parsed_args = arg_parser.parse_args()
 parsed_args.base_dir = flatten_paths(parsed_args.base_dir)
