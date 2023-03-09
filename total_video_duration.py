@@ -11,6 +11,9 @@ file_extensions: list[str] = parsed_args.file_extension
 is_recursive: bool = parsed_args.recursive
 is_verbose: bool = parsed_args.verbose
 
+TITLE_LENGTH = 60
+TITLE_CHAR = "="
+TITLE_EMPTY_SPACE_FILLER = " "
 
 def get_video_duration(file_path: str) -> float: # returns seconds
     video = cv2.VideoCapture(file_path)
@@ -37,6 +40,10 @@ def get_total_duration(
     
     total_videos = 0
     total_duration = 0 # seconds
+    if is_verbose:
+        print("".center(TITLE_LENGTH, TITLE_CHAR))
+        print("Processing Video files".center(TITLE_LENGTH, TITLE_EMPTY_SPACE_FILLER))
+        print("".center(TITLE_LENGTH, TITLE_CHAR))
     for glob in globs:
         for file in glob:
             absolute_file_path = str(file.absolute())
@@ -57,11 +64,18 @@ def main():
         is_recursive,
         video_duration_callback=lambda duration, video_file: print(f"{dt(seconds=round(duration))} - {video_file}")
     )
+    
     total_duration = dt(seconds=round(total_duration))
-    print(f"###############################")
+    if is_verbose:
+        print()
+        print("".center(TITLE_LENGTH, TITLE_CHAR))
+        print("Summary".center(TITLE_LENGTH, TITLE_EMPTY_SPACE_FILLER))
+    
+    print("".center(TITLE_LENGTH, TITLE_CHAR))
     print(f"Videos: {total_videos}")
     print(f"Total Duration: {total_duration}")
-    print(f"###############################")
+    print("".center(TITLE_LENGTH, TITLE_CHAR))
+
 
 
 if __name__ == '__main__':

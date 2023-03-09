@@ -4,18 +4,18 @@ import glob
 
 
 def convert_to_path(path: str) -> Path:
-
     if path.startswith('~'):
         path = Path(path).expanduser()
     else:
         path = Path(path).absolute()
 
     is_glob_dir = glob.has_magic(str(path))
-
-    if is_glob_dir:
+    is_dir_exists = path.exists()
+    
+    if is_glob_dir and not is_dir_exists:
         return [Path(path) for path in glob.iglob(str(path))]
-    elif path.exists() and path.is_dir():
-        return path
+    elif is_dir_exists and path.is_dir():
+        return [path]
     raise ValueError("Path does not exist or not a directory!")
 
 def flatten_paths(paths:list[list[Path]|Path]) -> list[Path]:
